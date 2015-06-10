@@ -5,10 +5,10 @@
 'use strict';
 
 var React = require('react-native');
-var Collapsible = require('Collapsible');
 var {
   AppRegistry,
   PickerIOS,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -16,82 +16,35 @@ var {
 } = React;
 var PickerItemIOS = PickerIOS.Item;
 
+var Dimensions = require('Dimensions');
+var {width, height} = Dimensions.get('window');
+
+var ScreenNavigator = require('./ScreenNavigator.js');
+var LayoutScreen = require('./LayoutScreen.js');
+
+var globalVariables = require('./globalVariables.js');
+
 var CAR_YEARS = ['2014', '2015', '2016'];
 var CAR_MAKES = ['Honda', 'Toyota', 'BMW', 'Mecedes Benz', 'Ford'];
 
 var ReactNativeAccordionPickerIOS = React.createClass({
   getInitialState: function() {
     return {
-      activeAccordion: false,
-      year: '2015',
-      make: 'Honda',
+      tab: 'layout'
     };
   },
-  _toggleAccordion: function(accordion) {
-    this.setState({
-      activeAccordion: this.state.activeAccordion === accordion ? false : accordion,
-    });
-  },
   render: function() {
+    var  screenElement = (<ScreenNavigator title='Layout' component={LayoutScreen} key='layout' />);
     return (
-      <View style={styles.container}>
-        <TouchableHighlight onPress={() => this._toggleAccordion('first')}>
-          <Text style={styles.title}>Year {this.state.year}</Text>
-        </TouchableHighlight>
-        <Collapsible collapsed={this.state.activeAccordion !== 'first'}>
-          <PickerIOS
-            selectedValue={this.state.year}
-            onValueChange={(year) => this.setState({year})}>
-            {CAR_YEARS.map((year, yearIndex) => (
-              <PickerItemIOS
-                key={year}
-                value={year}
-                label={year}
-                />
-              )
-            )}
-          </PickerIOS>
-        </Collapsible>
-        <TouchableHighlight onPress={() => this._toggleAccordion('make')}>
-          <Text style={styles.title}>Make {this.state.make}</Text>
-        </TouchableHighlight>
-        <Collapsible collapsed={this.state.activeAccordion !== 'make'}>
-          <PickerIOS
-            selectedValue={this.state.make}
-            onValueChange={(make) => this.setState({make})}>
-            {CAR_MAKES.map((make, makeIndex) => (
-              <PickerItemIOS
-                key={make}
-                value={make}
-                label={make}
-                />
-              )
-            )}
-          </PickerIOS>
-        </Collapsible>
+      <View style={styles.app}>
+        {screenElement}
       </View>
     );
-  }
+  },
 });
 
 var styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    marginTop: 60,
-    marginLeft: 10,
-    backgroundColor: '#F5FCFF',
-  },
-  title: {
-    fontSize: 20,
-    textAlign: 'left',
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+  app: { width, height },
 });
 
 AppRegistry.registerComponent('ReactNativeAccordionPickerIOS', () => ReactNativeAccordionPickerIOS);
